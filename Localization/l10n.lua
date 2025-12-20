@@ -120,6 +120,10 @@ end
 
 local format, unpack, tostring = string.format, unpack, tostring
 function _l10n:translate(key, ...)
+    if key == nil then
+        return ""
+    end
+    key = tostring(key)
     local args = {...}
 
     for i, v in ipairs(args) do

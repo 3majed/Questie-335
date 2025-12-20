@@ -636,7 +636,7 @@ local function _GetContinent(uiMapId)
 end
 
 local function _GetZoneName(zoneOrSort, questId)
-    if not zoneOrSort then return end
+    if not zoneOrSort then return "Unknown Zone" end
     local zoneName
     local sortObj = Questie.db.profile.trackerSortObjectives
     if sortObj == "byZone" or sortObj == "byZonePlayerProximity" or sortObj == "byZonePlayerProximityReversed" then

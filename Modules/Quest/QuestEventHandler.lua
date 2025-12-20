@@ -395,6 +395,7 @@ function _QuestEventHandler:QuestLogUpdate()
         -- Function call updates doFullQuestLogScan. Order matters.
         _QuestEventHandler:UpdateAllQuests()
     else
+        _QuestEventHandler:CleanupRemovedQuestsFallback()
         QuestieCombatQueue:Queue(function()
             QuestieTracker:Update()
         end)
@@ -442,6 +443,57 @@ function _QuestEventHandler:UnitQuestLogChanged(unitTarget)
     skipNextUQLCEvent = false
 end
 
+
+-- Fallback cleanup: some servers remove quests without firing QUEST_REMOVED reliably.
+-- This compares Questie's currentQuestlog vs the game's quest log and removes stale quests.
+function _QuestEventHandler:CleanupRemovedQuestsFallback()
+    local gameQuestIds = {}
+    local numEntries = select(1, GetNumQuestLogEntries()) or 0
+    for questLogIndex = 1, numEntries do
+        local title, _, _, isHeader, _, _, _, qid = GetQuestLogTitle(questLogIndex)
+        if title and qid and qid > 0 and (not isHeader) then
+            gameQuestIds[qid] = true
+        end
+    end
+
+    if QuestiePlayer and QuestiePlayer.currentQuestlog then
+        local removedQuestIds = {}
+        for questId in pairs(QuestiePlayer.currentQuestlog) do
+            if questId and questId > 0 and (not gameQuestIds[questId]) then
+                removedQuestIds[#removedQuestIds + 1] = questId
+            end
+        end
+
+        for i = 1, #removedQuestIds do
+            local questId = removedQuestIds[i]
+
+            -- Quest disappeared from log (abandoned or auto-turned-in)
+            local quest = QuestieDB.GetQuest(questId)
+            local wasComplete = (Questie.db.char.complete and Questie.db.char.complete[questId]) or (quest and quest.WasComplete)
+
+            QuestLogCache.RemoveQuest(questId)
+            QuestieQuest:SetObjectivesDirty(questId)
+
+            if wasComplete then
+                QuestieQuest:CompleteQuest(questId)
+            else
+                QuestieQuest:AbandonedQuest(questId)
+                QuestieJourney:AbandonQuest(questId)
+                QuestieAnnounce:AbandonedQuest(questId)
+            end
+
+            questLog[questId] = nil
+        end
+
+        if #removedQuestIds > 0 then
+            QuestieNameplate:UpdateNameplate()
+            QuestieCombatQueue:Queue(function()
+                QuestieTracker:Update()
+            end)
+        end
+    end
+end
+
 --- Does a full scan of the quest log and updates every quest that is in the QUEST_ACCEPTED state and which hash changed
 --- since the last check
 function _QuestEventHandler:UpdateAllQuests()
@@ -473,6 +525,40 @@ function _QuestEventHandler:UpdateAllQuests()
         end)
     else
         Questie:Debug(Questie.DEBUG_INFO, "Nothing to update")
+    end
+
+
+    _QuestEventHandler:CleanupRemovedQuestsFallback()
+
+    if QuestiePlayer and QuestiePlayer.currentQuestlog then
+        local removedQuestIds = {}
+        for questId in pairs(QuestiePlayer.currentQuestlog) do
+            if questId and questId > 0 and (not gameQuestIds[questId]) then
+                removedQuestIds[#removedQuestIds + 1] = questId
+            end
+        end
+
+        for i = 1, #removedQuestIds do
+            local questId = removedQuestIds[i]
+
+            -- Quest disappeared from log (abandoned or auto-turned-in)
+            local quest = QuestieDB.GetQuest(questId)
+            local wasComplete = (Questie.db.char.complete and Questie.db.char.complete[questId]) or (quest and quest.WasComplete)
+
+            QuestLogCache.RemoveQuest(questId)
+            QuestieQuest:SetObjectivesDirty(questId)
+
+            if wasComplete then
+                QuestieQuest:CompleteQuest(questId)
+            else
+                QuestieQuest:AbandonedQuest(questId)
+                QuestieJourney:AbandonQuest(questId)
+                QuestieAnnounce:AbandonedQuest(questId)
+            end
+
+            questLog[questId] = nil
+            QuestieNameplate:UpdateNameplate()
+        end
     end
 
     -- Do UpdateAllQuests() again at next QUEST_LOG_UPDATE if there was "cacheMiss" (game's cache and addon's cache didn't have all required data yet)
