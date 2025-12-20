@@ -365,9 +365,20 @@ end
 ---@param questId number
 function _QuestEventHandler:MarkQuestAsAbandoned(questId)
     Questie:Debug(Questie.DEBUG_DEVELOP, "QuestEventHandler:MarkQuestAsAbandoned")
-    if questLog[questId].state == QUEST_LOG_STATES.QUEST_REMOVED then
+    local questEntry = questLog[questId]
+
+    -- On some clients or edge cases the delayed ticker can fire
+    -- after the questLog entry has already been cleared (for example
+    -- when other handlers remove it earlier). Guard against that
+    -- so we don't attempt to index a nil value.
+    if (not questEntry) then
+        Questie:Debug(Questie.DEBUG_DEVELOP, "QuestEventHandler:MarkQuestAsAbandoned - questLog entry missing for", questId)
+        return
+    end
+
+    if questEntry.state == QUEST_LOG_STATES.QUEST_REMOVED then
         Questie:Debug(Questie.DEBUG_INFO, "Quest:", questId, "was abandoned")
-        questLog[questId].state = QUEST_LOG_STATES.QUEST_ABANDONED
+        questEntry.state = QUEST_LOG_STATES.QUEST_ABANDONED
 
         QuestLogCache.RemoveQuest(questId)
         QuestieQuest:SetObjectivesDirty(questId) -- is this necessary? should whole quest.Objectives be cleared at some point of quest removal?
