@@ -29,7 +29,7 @@ AscensionDB.objectData = AscensionDB.objectData or {
 		[9903556]={[1]="Pets Tab (Shift+P), Mounts Tab, Summon Mount",[2]=nil,[3]=nil,[4]={[12]={{43.97,64.16}}},[5]=12,[6]=nil},
 		[9903553]={[1]="Open the Dungeon Finder (I) / Green Eye",[2]=nil,[3]=nil,[4]=nil,[5]=nil,[6]=nil},
 		[9903554]={[1]="Select dungeon(s) then click Find Group",[2]=nil,[3]=nil,[4]=nil,[5]=nil,[6]=nil},
-		[99017005]={[1]="Smudged Note",[2]=nil,[3]=nil,[4]={[12]={{64.57,41.80}}},[5]=12,[6]=nil},
+		[99017005]={[1]="Smudged Note",[2]={17005},[3]=nil,[4]={[12]={{64.57,41.80}}},[5]=12,[6]=nil},
 }
 
 -- Backward compatibility (if any code still references AscensionObjectDB.objectData/objectDat)
