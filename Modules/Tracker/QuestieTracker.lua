@@ -115,12 +115,32 @@ function QuestieTracker:PruneGhostQuests()
     end
 
     local removedAny = false
+
     for key, q in pairs(QuestiePlayer.currentQuestlog) do
-        local questId = tonumber(key) or (type(q) == "table" and q.Id) or nil
+        local keyId = tonumber(key)
+        local questId = keyId or (type(q) == "table" and q.Id) or (type(q) == "number" and q) or nil
+
+        -- Normalize bad entries: sometimes the value is the questId instead of the quest table.
+        if questId and type(q) ~= "table" then
+            local quest = QuestieDB and QuestieDB.GetQuest and QuestieDB.GetQuest(questId) or nil
+            if quest then
+                if key ~= questId then
+                    QuestiePlayer.currentQuestlog[key] = nil
+                end
+                QuestiePlayer.currentQuestlog[questId] = quest
+                q = quest
+                keyId = questId
+            end
+        end
+
         if questId then
             local idx = GetQuestLogIndexByID and GetQuestLogIndexByID(questId)
             if (not idx) or idx <= 0 then
                 QuestiePlayer.currentQuestlog[key] = nil
+                if key ~= questId then
+                    QuestiePlayer.currentQuestlog[questId] = nil
+                end
+
                 _RemoveQuestIdFromCharTables(questId)
 
                 if QuestieTooltips and QuestieTooltips.RemoveQuest then
@@ -573,7 +593,15 @@ function QuestieTracker:HasQuest()
             -- Keep track of the number of completed quests
             for questId, quest in pairs(QuestiePlayer.currentQuestlog) do
                 if not quest then break end
-                if quest:IsComplete() == 1 then
+
+                if type(quest) ~= "table" then
+                    quest = QuestieDB and QuestieDB.GetQuest and QuestieDB.GetQuest(questId) or nil
+                    if quest then
+                        QuestiePlayer.currentQuestlog[questId] = quest
+                    end
+                end
+
+                if quest and quest.IsComplete and quest:IsComplete() == 1 then
                     completedQuests = completedQuests + 1
                 end
             end
@@ -1760,31 +1788,48 @@ function QuestieTracker:Update()
         trackerBaseFrame:Hide()
         for questId, quest in pairs(QuestiePlayer.currentQuestlog) do
             if quest then
-                if Questie.db.char.TrackerHiddenQuests[questId] then
-                    quest.HideIcons = true
-                end
-
-                if Questie.db.char.TrackerFocus and type(Questie.db.char.TrackerFocus) == "number" and Questie.db.char.TrackerFocus == quest.Id then -- quest focus
-                    TrackerUtils:FocusQuest(quest.Id)
-                end
-
-                for _, objective in pairs(quest.Objectives) do
-                    if Questie.db.char.TrackerHiddenObjectives[tostring(questId) .. " " .. tostring(objective.Index)] then
-                        objective.HideIcons = true
-                    end
-
-                    if Questie.db.char.TrackerFocus and type(Questie.db.char.TrackerFocus) == "string" and Questie.db.char.TrackerFocus == tostring(quest.Id) .. " " .. tostring(objective.Index) then
-                        TrackerUtils:FocusObjective(quest.Id, objective.Index)
+                if type(quest) ~= "table" then
+                    quest = QuestieDB and QuestieDB.GetQuest and QuestieDB.GetQuest(questId) or nil
+                    if quest then
+                        QuestiePlayer.currentQuestlog[questId] = quest
                     end
                 end
 
-                for _, objective in pairs(quest.SpecialObjectives) do
-                    if Questie.db.char.TrackerHiddenObjectives[tostring(questId) .. " " .. tostring(objective.Index)] then
-                        objective.HideIcons = true
+                if type(quest) == "table" then
+                    if Questie.db.char.TrackerHiddenQuests[questId] then
+                        quest.HideIcons = true
                     end
 
-                    if Questie.db.char.TrackerFocus and type(Questie.db.char.TrackerFocus) == "string" and Questie.db.char.TrackerFocus == tostring(quest.Id) .. " " .. tostring(objective.Index) then
-                        TrackerUtils:FocusObjective(quest.Id, objective.Index)
+                    if Questie.db.char.TrackerFocus and type(Questie.db.char.TrackerFocus) == "number" and quest.Id and Questie.db.char.TrackerFocus == quest.Id then -- quest focus
+                        TrackerUtils:FocusQuest(quest.Id)
+                    end
+
+                    if quest.Objectives then
+                        for _, objective in pairs(quest.Objectives) do
+                            if objective and objective.Index then
+                                if Questie.db.char.TrackerHiddenObjectives[tostring(questId) .. " " .. tostring(objective.Index)] then
+                                    objective.HideIcons = true
+                                end
+
+                                if Questie.db.char.TrackerFocus and type(Questie.db.char.TrackerFocus) == "string" and quest.Id and Questie.db.char.TrackerFocus == tostring(quest.Id) .. " " .. tostring(objective.Index) then
+                                    TrackerUtils:FocusObjective(quest.Id, objective.Index)
+                                end
+                            end
+                        end
+                    end
+
+                    if quest.SpecialObjectives then
+                        for _, objective in pairs(quest.SpecialObjectives) do
+                            if objective and objective.Index then
+                                if Questie.db.char.TrackerHiddenObjectives[tostring(questId) .. " " .. tostring(objective.Index)] then
+                                    objective.HideIcons = true
+                                end
+
+                                if Questie.db.char.TrackerFocus and type(Questie.db.char.TrackerFocus) == "string" and quest.Id and Questie.db.char.TrackerFocus == tostring(quest.Id) .. " " .. tostring(objective.Index) then
+                                    TrackerUtils:FocusObjective(quest.Id, objective.Index)
+                                end
+                            end
+                        end
                     end
                 end
             end
