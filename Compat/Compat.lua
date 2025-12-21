@@ -493,9 +493,12 @@ function QuestieCompat.CalculateNextResetTime()
     local timeUntilReset = GetQuestResetTime()
 
     Questie:Debug(Questie.DEBUG_DEVELOP, "[CalculateNextResetTime] GetQuestResetTime: ", timeUntilReset)
-    if timeUntilReset <= 0 then
-        Questie:Error("GetQuestResetTime() returns an invalid value: "..timeUntilReset..". Please report on Github!")
-        return
+    -- Some private/modified servers can return negative or zero values here.
+    -- Instead of erroring out (and spamming chat), fall back to a sane default
+    -- daily reset of 24 hours from now.
+    if (not timeUntilReset) or (timeUntilReset <= 0) then
+        Questie:Debug(Questie.DEBUG_DEVELOP, "[CalculateNextResetTime] Invalid GetQuestResetTime ("..tostring(timeUntilReset)..") - using 24h fallback")
+        timeUntilReset = 24 * 60 * 60
     end
     Questie.db.profile.dailyResetTime = Questie.db.profile.dailyResetTime or (currentTime + timeUntilReset)
     Questie:Debug(Questie.DEBUG_DEVELOP, "[CalculateNextResetTime] Next daily rest time: ", date("%m/%d/%y %H:%M:%S", Questie.db.profile.dailyResetTime))
