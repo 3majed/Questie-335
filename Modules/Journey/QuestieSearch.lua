@@ -74,19 +74,24 @@ function QuestieSearch:Search(rawQuery, searchType, queryType)
 
     local databaseQueryHandle
     local databaseKeys
+    local overrideKeys
 
     if searchType == "npc" then
         databaseQueryHandle = QuestieDB.QueryNPCSingle
         databaseKeys = QuestieDB.NPCPointers
+        overrideKeys = QuestieDB.npcDataOverrides
     elseif searchType == "object" then
         databaseQueryHandle = QuestieDB.QueryObjectSingle
         databaseKeys = QuestieDB.ObjectPointers
+        overrideKeys = QuestieDB.objectDataOverrides
     elseif searchType == "item" then
         databaseQueryHandle = QuestieDB.QueryItemSingle
         databaseKeys = QuestieDB.ItemPointers
+        overrideKeys = QuestieDB.itemDataOverrides
     elseif searchType == "quest" then
         databaseQueryHandle = QuestieDB.QueryQuestSingle
         databaseKeys = QuestieDB.QuestPointers
+        overrideKeys = QuestieDB.questDataOverrides
     else
         return
     end
@@ -126,25 +131,39 @@ function QuestieSearch:Search(rawQuery, searchType, queryType)
     end
     if isTextSearch then
         local queryToFind = string.lower(sanitizedQuery)
-        for id, _ in pairs(databaseKeys) do
+        local visited = {}
+
+        local function _RunNameMatch(id)
             local name = databaseQueryHandle(id, "name") -- Some entries don't have a 'name' because of the way we load corrections
             if strictSearch then
                 if name and (string.lower(name) == queryToFind) then -- strict search
-                    -- We have a search result or a favourite to display
                     searchCount = searchCount + 1;
                     QuestieSearch.LastResult[searchType][id] = true;
                 else
-                    -- This entry doesn't meet the search criteria, removed from the last results
                     QuestieSearch.LastResult[searchType][id] = nil;
                 end
             else
                 if name and string.find(string.lower(name), queryToFind) then -- fuzzy search
-                    -- We have a search result or a favourite to display
                     searchCount = searchCount + 1;
                     QuestieSearch.LastResult[searchType][id] = true;
                 else
-                    -- This entry doesn't meet the search criteria, removed from the last results
                     QuestieSearch.LastResult[searchType][id] = nil;
+                end
+            end
+        end
+
+        if type(databaseKeys) == "table" then
+            for id, _ in pairs(databaseKeys) do
+                visited[id] = true
+                _RunNameMatch(id)
+            end
+        end
+
+        -- Include custom data injected via overrides, since these IDs may not exist in *Pointers.
+        if type(overrideKeys) == "table" then
+            for id, _ in pairs(overrideKeys) do
+                if not visited[id] then
+                    _RunNameMatch(id)
                 end
             end
         end
