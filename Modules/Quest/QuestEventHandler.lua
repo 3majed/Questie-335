@@ -367,9 +367,6 @@ function _QuestEventHandler:MarkQuestAsAbandoned(questId)
     Questie:Debug(Questie.DEBUG_DEVELOP, "QuestEventHandler:MarkQuestAsAbandoned")
     local questEntry = questLog[questId]
 
-    -- On some clients or edge cases the delayed ticker can fire
-    -- after the questLog entry has already been cleared (for example
-    -- when other handlers remove it earlier). Guard against that
     -- so we don't attempt to index a nil value.
     if (not questEntry) then
         Questie:Debug(Questie.DEBUG_DEVELOP, "QuestEventHandler:MarkQuestAsAbandoned - questLog entry missing for", questId)
@@ -540,37 +537,6 @@ function _QuestEventHandler:UpdateAllQuests()
 
 
     _QuestEventHandler:CleanupRemovedQuestsFallback()
-
-    if QuestiePlayer and QuestiePlayer.currentQuestlog then
-        local removedQuestIds = {}
-        for questId in pairs(QuestiePlayer.currentQuestlog) do
-            if questId and questId > 0 and (not gameQuestIds[questId]) then
-                removedQuestIds[#removedQuestIds + 1] = questId
-            end
-        end
-
-        for i = 1, #removedQuestIds do
-            local questId = removedQuestIds[i]
-
-            -- Quest disappeared from log (abandoned or auto-turned-in)
-            local quest = QuestieDB.GetQuest(questId)
-            local wasComplete = (Questie.db.char.complete and Questie.db.char.complete[questId]) or (quest and quest.WasComplete)
-
-            QuestLogCache.RemoveQuest(questId)
-            QuestieQuest:SetObjectivesDirty(questId)
-
-            if wasComplete then
-                QuestieQuest:CompleteQuest(questId)
-            else
-                QuestieQuest:AbandonedQuest(questId)
-                QuestieJourney:AbandonQuest(questId)
-                QuestieAnnounce:AbandonedQuest(questId)
-            end
-
-            questLog[questId] = nil
-            QuestieNameplate:UpdateNameplate()
-        end
-    end
 
     -- Do UpdateAllQuests() again at next QUEST_LOG_UPDATE if there was "cacheMiss" (game's cache and addon's cache didn't have all required data yet)
     doFullQuestLogScan = doFullQuestLogScan or cacheMiss
