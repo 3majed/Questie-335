@@ -144,8 +144,8 @@ local function _TryBuildNpcQuestStarterDrops()
 
     _npcQuestStarterDrops = {}
 
-    -- Iterate all items once and index only those that start quests
-    for itemId, _ in pairs(pointers) do
+    -- Helper function to process an item and add it to the lookup table
+    local function processItem(itemId)
         local questId = QuestieDB.QueryItemSingle(itemId, "startQuest")
         if questId and questId ~= 0 then
             local npcDrops = QuestieDB.QueryItemSingle(itemId, "npcDrops")
@@ -160,6 +160,18 @@ local function _TryBuildNpcQuestStarterDrops()
                     list[#list + 1] = { itemId = itemId, questId = tonumber(questId), name = itemName }
                 end
             end
+        end
+    end
+
+    -- Iterate all items from compiled database
+    for itemId, _ in pairs(pointers) do
+        processItem(itemId)
+    end
+
+    -- Also iterate Ascension override items (they don't have pointers)
+    if QuestieDB.itemDataOverrides and type(QuestieDB.itemDataOverrides) == "table" then
+        for itemId, _ in pairs(QuestieDB.itemDataOverrides) do
+            processItem(itemId)
         end
     end
 
