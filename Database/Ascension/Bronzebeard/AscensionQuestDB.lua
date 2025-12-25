@@ -1,7 +1,6 @@
 ---@type table
 local AscensionDB = QuestieLoader:CreateModule("AscensionDB")
 
-
 AscensionDB.questData = AscensionDB.questData or {
 
 		--Elwynn Forest
@@ -36,6 +35,35 @@ AscensionDB.questData = AscensionDB.questData or {
 		[1660005]={[1]="The Threat Swept Downstream",[2]={{161705}},[3]={{161705}},[4]=3,[5]=6,[6]=1101,[7]=nil,[8]={"Defeat the Defias lurking in the ruined tower and thin the ranks of the Shadewell murlocs atop the waterfall, across the rope bridge."},[9]=nil,[10]={[1]={{161736,"Defias Plunderer slain"},{161716,"Shadewell Murloc slain"}}},[11]=nil,[12]=nil,[13]={1660004},[14]=nil,[15]=nil,[16]=nil,[17]=9},
 		[1660060]={[1]="Stay a While",[2]={{162806}},[3]={{162806}},[4]=6,[5]=8,[6]=0,[7]=nil,[8]={"","Take a moment from the noise and haste and stay a while to listen to Aliscar Lend.","","- Listen to Aliscar Lend x 1"},[9]=nil,[10]={[1]={{162943,"Listen to Aliscar Lend"}}},[11]=nil,[12]=nil,[13]=nil,[14]=nil,[15]=nil,[16]=nil,[17]=12},
 		[100071]={[1]="Defias Disruption",[2]={{6778}},[3]={{6778}},[4]=6,[5]=8,[6]=0,[7]=nil,[8]={"","Thin the ranks of the Defias at the Bandit Bastion, east of Goldshire.","","- Defias Bandit x 6","- Defias Rogue Wizard x 4"},[9]=nil,[10]={[1]={{116,"Defias Bandit slain"},{474,"Defias Rogue Wizard slain"}}},[11]=nil,[12]=nil,[13]={47},[14]=nil,[15]=nil,[16]=nil,[17]=12},
+
+
+		--Durotar 
+		
+		[788]={[1]="Cutting Teeth",[2]={{3143}},[3]={{3143}},[4]=1,[5]=2,[6]=0,[7]=0,[8]={"Kill 8 Mottled Boars then return to Gornek at the Den."},[10]={{{3098}},nil,nil},[13]={4641},[17]=1244},
+		[789]={[1]="Sting of the Scorpid",[2]={{3143}},[3]={{3143}},[4]=1,[5]=3,[6]=0,[7]=0,[8]={"Get 8 Scorpid Worker Tails for Gornek in the Den."},[10]={nil,nil,{{4862}}},[13]={788},[17]=1244},
+		[790]={[1]="Sarkoth",[2]={{3287}},[3]={{3287}},[4]=3,[5]=5,[6]=0,[7]=0,[8]={"Kill Sarkoth and bring his claw back to Hana'zua."},[10]={nil,nil,{{4905}}},[17]=1244},
+		[792]={[1]="Vile Familiars",[2]={{3145}},[3]={{3145}},[4]=2,[5]=4,[6]=0,[7]=0,[8]={"Kill 8 Vile Familiars.","Return to Zureetha Fargaze outside the Den."},[10]={{{3102},{3101}},nil,nil},[17]=1244},
+		[794]={[1]="Burning Blade Medallion",[2]={{3145}},[3]={{3145}},[4]=3,[5]=5,[6]=0,[7]=0,[8]={"Bring the Burning Blade Medallion to Zureetha Fargaze, outside The Den."},[13]={792},[17]=1244},
+		[804]={[1]="Sarkoth",[2]={{3287}},[3]={{3143}},[4]=3,[5]=5,[6]=0,[7]=0,[8]={"Bring the news of Hana'zua's plight to Gornek at the Den."},[13]={790},[17]=1244},
+		[805]={[1]="Report to Sen'jin Village",[2]={{3145}},[4]=3,[5]=5,[6]=0,[7]=0,[8]={"Speak with Master Gadrin in Sen'jin Village."},[13]={794},[17]=1244},
+		[2383]={[1]="Simple Parchment",[2]={{3143}},[3]={{3153}},[4]=1,[5]=1,[6]=0,[7]=0,[8]={"Read the Simple Parchment and speak to Frang in the Valley of Trials."},[13]={788},[17]=1244},
+		[4402]={[1]="Galgar's Cactus Apple Surprise",[2]={{9796}},[3]={{9796}},[4]=1,[5]=3,[6]=0,[7]=0,[8]={"Bring Galgar 6 Cactus Apples. You remember him saying that they could be found near cactuses."},[10]={nil,{{5047023}},nil},[17]=1244},
+		[4641]={[1]="Your Place In The World",[2]={{10176}},[3]={{3143}},[4]=1,[5]=1,[6]=0,[7]=0,[8]={"Speak with Gornek. You recall Kaltunk marking your map with his location and mentioning that Gornek resided in the Den, a building to the west. "},[17]=1244},
+		[5441]={[1]="Lazy Peons",[2]={{11378}},[3]={{11378}},[4]=2,[5]=4,[6]=0,[7]=0,[8]={"Use the Foreman's Blackjack on Lazy Peons when they're sleeping.  Wake up 5 peons, then return the Foreman's Blackjack to Foreman Thazz'ril in the Valley of Trials."},[10]={{{10556}},nil,nil},[11]=16114,[17]=1244},
+		[6394]={[1]="Thazz'ril's Pick",[2]={{11378}},[3]={{11378}},[4]=2,[5]=4,[6]=0,[7]=0,[8]={"Bring Thazz'ril's Pick to Foreman Thazz'ril."},[10]={nil,{{8872834}},nil},[13]={5441},[17]=1244},
+		[254008]={[1]="To Find a Cure",[2]={{254011}},[3]={{254011}},[4]=1,[5]=2,[6]=0,[7]=0,[8]={"Find the strange flower."},[10]={nil,{{5183142}},nil},[17]=1244},
+		[254009]={[1]="A Dangerous Sample",[2]={{254011}},[3]={{254011}},[4]=1,[5]=2,[6]=0,[7]=0,[8]={"Collect demon blood from a strong demon."},[10]={nil,nil,{{254006}}},[13]={254008},[17]=1244},
+		[254010]={[1]="Knowledge of the Centaurs",[2]={{254011}},[4]=2,[5]=4,[6]=0,[7]=0,[8]={"Search the centaur camp for clues to the flower's properties."},[11]=11584,[13]={254009},[17]=1244},
+		[580168]={[1]="Path to Ascension: Less Running, More Ressing",[2]={{75118}},[4]=6,[5]=8,[6]=0,[7]=0,[8]={"Cast Resurrect in Closest Town or Capital City next time you die."},[17]=1244},
+		[1660018]={[1]="Those Who Fell",[2]={{161732}},[3]={{161733}},[4]=4,[5]=6,[6]=0,[7]=0,[8]={"Use the Unremarkable Stone to extract samples of spiritual unrest from the restless orcs and trolls, and present your findings to the witch of Zeb'Goro."},[11]=559158,[17]=1244},
+		[1660019]={[1]="The Way is Shut",[2]={{161733}},[3]={{161734}},[4]=4,[5]=6,[6]=0,[7]=0,[8]={"Use the amulet given to you by Swa'li to break through the magical barrier guarding the entrance to the Sinister Lair."},[11]=559146,[13]={1660018},[17]=1244},
+		[1660020]={[1]="The Sinister Triad",[2]={{161734}},[3]={{161734}},[4]=4,[5]=6,[6]=0,[7]=0,[8]={"Gather the spiritual essences of the beasts haunting the Sinister Lair. You will need one from a spider, one from a bat, and one from a serpent."},[10]={nil,{{1196379},{6225633},{9133592}},nil},[13]={1660019},[17]=2030},
+		[1660021]={[1]="So That He May Hear Again",[2]={{161734}},[3]={{161732}},[4]=4,[5]=6,[6]=0,[7]=0,[8]={"Free the elementals next to the cave. Then, speak with Esgramor and tell him of Hirsutta's true intentions."},[10]={nil,{{6649507},{1064805},{2392807},{3478505},{4541078}},nil},[13]={1660019},[17]=2030},
+		[1660022]={[1]="A Sinister Ritual",[2]={{161732}},[3]={{161732}},[4]=4,[5]=6,[6]=0,[7]=0,[8]={"Confront Hirsutta the Witch and put an end to her dark ritual."},[10]={{{161790}},nil,nil},[13]={1660021},[17]=1244},
+		[1660023]={[1]="Innocents for Sinners",[2]={{161732}},[3]={{161732}},[4]=4,[5]=6,[6]=0,[7]=0,[8]={"Defeat the voodoo devotees guarding the path that leads to Hirsutta."},[10]={{{161807}},nil,nil},[13]={1660021},[17]=1244},
+		[1660037]={[1]="Unease Makes Tongues Wag",[2]={{161733}},[3]={{161733}},[4]=4,[5]=6,[6]=0,[7]=0,[8]={"Destroy the talking Tiki Masks around Zeb'Goro."},[10]={{{161854},{161855},{161856}},nil,nil},[11]=559146,[13]={1660018},[17]=1244},
+		[1660041]={[1]="A Door Left Ajar",[2]={{161734}},[3]={{161734}},[4]=4,[5]=6,[6]=0,[7]=0,[8]={"Defeat Techla'tu, Gatekeeper, in the Sinister Lair."},[10]={{{161833},{161793},{161792}},nil,nil},[13]={1660019},[17]=2030},
+		[1660061]={[1]="Esgramor's Master",[2]={{161732}},[4]=6,[5]=8,[6]=0,[7]=0,[8]={"Speak with Karagar in Razor Hill."},[10]={nil,{{9070546}},nil},[13]={1660022},[17]=1244},
 
 }
 

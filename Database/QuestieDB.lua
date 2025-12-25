@@ -1181,9 +1181,9 @@ function QuestieDB.GetQuest(questId) -- /dump QuestieDB.GetQuest(867)
     ---@type StartedBy
     local startedBy = QO.startedBy
     QO.Starts = {
-        NPC = startedBy[1],
-        GameObject = startedBy[2],
-        Item = startedBy[3],
+        NPC = startedBy and startedBy[1],
+        GameObject = startedBy and startedBy[2],
+        Item = startedBy and startedBy[3],
     }
     QO.isHidden = rawdata.hidden or QuestieCorrections.hiddenQuests[questId]
     QO.Description = QO.objectivesText
@@ -1195,7 +1195,7 @@ function QuestieDB.GetQuest(questId) -- /dump QuestieDB.GetQuest(867)
 
     ---@type FinishedBy
     local finishedBy = QO.finishedBy
-    if finishedBy[1] then
+    if finishedBy and finishedBy[1] then
         for _, id in pairs(finishedBy[1]) do
             if id then
                 QO.Finisher = {
@@ -1207,7 +1207,7 @@ function QuestieDB.GetQuest(questId) -- /dump QuestieDB.GetQuest(867)
             end
         end
     end
-    if finishedBy[2] then
+    if finishedBy and finishedBy[2] then
         for _, id in pairs(finishedBy[2]) do
             if id then
                 QO.Finisher = {

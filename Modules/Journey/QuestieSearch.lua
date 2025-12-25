@@ -75,23 +75,28 @@ function QuestieSearch:Search(rawQuery, searchType, queryType)
     local databaseQueryHandle
     local databaseKeys
     local overrideKeys
+    local ascensionKeys
 
     if searchType == "npc" then
         databaseQueryHandle = QuestieDB.QueryNPCSingle
         databaseKeys = QuestieDB.NPCPointers
         overrideKeys = QuestieDB.npcDataOverrides
+        ascensionKeys = QuestieDB.ascensionNpcIds
     elseif searchType == "object" then
         databaseQueryHandle = QuestieDB.QueryObjectSingle
         databaseKeys = QuestieDB.ObjectPointers
         overrideKeys = QuestieDB.objectDataOverrides
+        ascensionKeys = QuestieDB.ascensionObjectIds
     elseif searchType == "item" then
         databaseQueryHandle = QuestieDB.QueryItemSingle
         databaseKeys = QuestieDB.ItemPointers
         overrideKeys = QuestieDB.itemDataOverrides
+        ascensionKeys = QuestieDB.ascensionItemIds
     elseif searchType == "quest" then
         databaseQueryHandle = QuestieDB.QueryQuestSingle
         databaseKeys = QuestieDB.QuestPointers
         overrideKeys = QuestieDB.questDataOverrides
+        ascensionKeys = QuestieDB.ascensionQuestIds
     else
         return
     end
@@ -163,6 +168,16 @@ function QuestieSearch:Search(rawQuery, searchType, queryType)
         if type(overrideKeys) == "table" then
             for id, _ in pairs(overrideKeys) do
                 if not visited[id] then
+                    _RunNameMatch(id)
+                end
+            end
+        end
+        
+        -- Also include Ascension custom IDs
+        if type(ascensionKeys) == "table" then
+            for id, _ in pairs(ascensionKeys) do
+                if not visited[id] then
+                    visited[id] = true
                     _RunNameMatch(id)
                 end
             end
