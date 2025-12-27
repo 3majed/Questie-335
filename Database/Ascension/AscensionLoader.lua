@@ -52,21 +52,16 @@ function AscensionLoader:ApplyZoneTables()
     ZoneDB.private = ZoneDB.private or {}
     ZoneDB.private.uiMapIdToAreaId = ZoneDB.private.uiMapIdToAreaId or {}
     ZoneDB.private.areaIdToUiMapId = ZoneDB.private.areaIdToUiMapId or {}
-    ZoneDB.private.subZoneToParentZone = ZoneDB.private.subZoneToParentZone or {}
 
     for uiMapId, areaId in pairs(AscensionZoneTables.uiMapIdToAreaId) do
-        if uiMapId and areaId then
-            -- Always set these mappings (remove the nil check to ensure they're set)
+        if uiMapId and areaId and ZoneDB.private.uiMapIdToAreaId[uiMapId] == nil then
             ZoneDB.private.uiMapIdToAreaId[uiMapId] = areaId
-            
-            -- Ascension uses custom map ids for spawns/waypoints (e.g. 1238 for Northshire Valley).
-            -- QuestieMap draws by converting AreaId->UiMapId, so register these ids as self-mapping.
+        end
+
+        -- Ascension uses custom map ids for spawns/waypoints (e.g. 1238 for Northshire Valley).
+        -- QuestieMap draws by converting AreaId->UiMapId, so register these ids as self-mapping.
+        if uiMapId and ZoneDB.private.areaIdToUiMapId[uiMapId] == nil then
             ZoneDB.private.areaIdToUiMapId[uiMapId] = uiMapId
-            
-            -- Register subzone to parent zone mapping so GetParentZoneId works with Ascension zones
-            if uiMapId ~= areaId then
-                ZoneDB.private.subZoneToParentZone[uiMapId] = areaId
-            end
         end
     end
 
@@ -90,9 +85,6 @@ function AscensionLoader:InjectOverrides()
     if _overridesInjected then return end
     _overridesInjected = true
 
-    -- Apply zone tables FIRST, before any ZoneDB functions use the local variables
-    AscensionLoader:ApplyZoneTables()
-
     QuestieDB.npcDataOverrides = QuestieDB.npcDataOverrides or {}
     QuestieDB.objectDataOverrides = QuestieDB.objectDataOverrides or {}
     QuestieDB.itemDataOverrides = QuestieDB.itemDataOverrides or {}
@@ -114,36 +106,6 @@ function AscensionLoader:InjectOverrides()
         for questId, _ in pairs(questData) do
             if type(questId) == "number" then
                 QuestieDB.ascensionQuestIds[questId] = true
-            end
-        end
-    end
-    
-    -- Keep a lightweight list of custom NPC ids for search/UI
-    if type(npcData) == "table" then
-        QuestieDB.ascensionNpcIds = QuestieDB.ascensionNpcIds or {}
-        for npcId, _ in pairs(npcData) do
-            if type(npcId) == "number" then
-                QuestieDB.ascensionNpcIds[npcId] = true
-            end
-        end
-    end
-    
-    -- Keep a lightweight list of custom object ids for search/UI
-    if type(objectData) == "table" then
-        QuestieDB.ascensionObjectIds = QuestieDB.ascensionObjectIds or {}
-        for objectId, _ in pairs(objectData) do
-            if type(objectId) == "number" then
-                QuestieDB.ascensionObjectIds[objectId] = true
-            end
-        end
-    end
-    
-    -- Keep a lightweight list of custom item ids for search/UI
-    if type(itemData) == "table" then
-        QuestieDB.ascensionItemIds = QuestieDB.ascensionItemIds or {}
-        for itemId, _ in pairs(itemData) do
-            if type(itemId) == "number" then
-                QuestieDB.ascensionItemIds[itemId] = true
             end
         end
     end
@@ -204,20 +166,6 @@ do
             local level = QuestieDB.QueryQuestSingle(questId, "level") or QuestieDB.QueryQuestSingle(questId, "questLevel")
             local reqLevel = QuestieDB.QueryQuestSingle(questId, "requiredLevel") or QuestieDB.QueryQuestSingle(questId, "minLevel")
             local desc = QuestieDB.QueryQuestSingle(questId, "objectiveText") or QuestieDB.QueryQuestSingle(questId, "description") or QuestieDB.QueryQuestSingle(questId, "details")
-            
-            -- Build the Starts field from startedBy (CRITICAL for available quests to show icons!)
-            local startedBy = QuestieDB.QueryQuestSingle(questId, "startedBy")
-            
-            local starts = {
-                NPC = startedBy and startedBy[1] or {},
-                GameObject = startedBy and startedBy[2] or {},
-                Item = startedBy and startedBy[3] or {},
-            }
-            
-            -- Also get other fields needed for quest display
-            local finishedBy = QuestieDB.QueryQuestSingle(questId, "finishedBy")
-            local specialFlags = QuestieDB.QueryQuestSingle(questId, "specialFlags")
-            local isRepeatable = specialFlags and (bit.band(specialFlags, 1) ~= 0) or false
 
             -- Questie modules expect these common fields
             return {
@@ -227,9 +175,6 @@ do
                 level = level or reqLevel or 0,
                 requiredLevel = reqLevel or 0,
                 Description = desc, -- Journey tooltip reads quest.Description
-                Starts = starts, -- CRITICAL: AvailableQuests needs this!
-                finishedBy = finishedBy,
-                IsRepeatable = isRepeatable,
             }
         end
     end

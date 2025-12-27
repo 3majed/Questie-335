@@ -24,25 +24,20 @@ AscensionDB.itemData = AscensionDB.itemData or {
 
 
 		--Durotar 
-		[4859] = {'Burning Blade Medallion',{3183},nil,nil,nil,nil,nil,nil,1,0,0,12,0,nil,nil},
-		[4862] = {'Scorpid Worker Tail',{3124},nil,nil,nil,nil,nil,nil,1,0,0,12,0,nil,nil},
-		[4905] = {'Sarkoth\'s Mangled Claw',{3281},nil,nil,nil,nil,nil,nil,1,0,0,12,0,nil,nil},
-		[11583] = {'Cactus Apple',nil,{5047023},nil,nil,nil,nil,nil,1,0,0,12,0,nil,nil},
-		[11584] = {'Cactus Apple Surprise',nil,nil,nil,nil,nil,nil,nil,5,0,0,4,0,nil,{254010}},
-		[12635] = {'Simple Parchment',nil,nil,nil,nil,nil,nil,nil,1,0,0,12,0,nil,nil},
-		[16114] = {'Foreman\'s Blackjack',nil,nil,nil,nil,nil,nil,nil,1,0,0,12,0,nil,{5441}},
-		[16332] = {'Thazz\'ril\'s Pick',nil,{8872834},nil,nil,nil,nil,nil,1,0,0,12,0,nil,nil},
-		[254005] = {'Strange Flower',nil,{5183142},nil,nil,nil,nil,nil,1,0,0,12,0,nil,nil},
+		[11584] = {'Cactus Apple Surprise',nil,nil,nil,nil,nil,nil,nil,5,0,0,4,0,nil,{254010}},  
+		[254005] = {'Strange Flower',nil,{254001},nil,nil,nil,nil,nil,1,0,0,12,0,nil,{254008}},
 		[254006] = {'Xaitoth\'s Blood',{254015},nil,nil,nil,nil,nil,nil,1,0,0,12,0,nil,nil},
-		[559146] = {'Witch’s Amulet',nil,nil,nil,nil,nil,nil,nil,1,0,0,4,0,nil,{1660037,1660019}},
+		[559146] = {'Witch’s Amulet',nil,nil,nil,nil,nil,nil,nil,1,0,0,4,0,nil,{1660019}},
+		[559148] = {'Bat Spiritual Essence',{161793},nil,nil,nil,nil,nil,nil,1,0,0,4,0,nil,{1660020}},
+		[559149] = {'Spider Spiritual Essence',{161795},nil,nil,nil,nil,nil,nil,1,0,0,4,0,nil,{1660020}},
+		[559150] = {'Serpent Spiritual Essence',{161794},nil,nil,nil,nil,nil,nil,1,0,0,4,0,nil,{1660020}},
 		[559155] = {'Spiritual Unrest',{30719},nil,nil,nil,nil,nil,nil,0,0,0,4,0,nil,nil},
-		[559158] = {'Unremarkable Stone',nil,nil,nil,nil,nil,nil,nil,1,0,0,4,0,nil,{1660018}},
-		[559172] = {'Fire Elemental Shackles',nil,{1064805},nil,nil,nil,nil,nil,1,0,0,4,0,nil,nil},
-		[559173] = {'Earth Elemental Shackles',nil,{2392807},nil,nil,nil,nil,nil,1,0,0,4,0,nil,nil},
-		[559174] = {'Air Elemental Shackles',nil,{3478505},nil,nil,nil,nil,nil,1,0,0,4,0,nil,nil},
-		[559175] = {'Water Elemental Shackles',nil,{4541078},nil,nil,nil,nil,nil,1,0,0,4,0,nil,nil},
-		[824380] = {'Triad\'s Spear',nil,{4124320},nil,nil,nil,nil,nil,8,3,0,1,6,nil,nil},
-
+		[559158] = {'Unremarkable Stone',nil,nil,nil,nil,nil,nil,64,1,0,0,12,0,nil,nil},
+		[559172] = {'Fire Elemental Shackles',nil,{1064805},nil,nil,nil,nil,nil,1,0,0,4,0,nil,{1660021}},
+		[559173] = {'Earth Elemental Shackles',nil,{2392807},nil,nil,nil,nil,nil,1,0,0,4,0,nil,{1660021}},
+		[559174] = {'Air Elemental Shackles',nil,{3478505},nil,nil,nil,nil,nil,1,0,0,4,0,nil,{1660021}},
+		[559175] = {'Water Elemental Shackles',nil,{4541078},nil,nil,nil,nil,nil,1,0,0,4,0,nil,{1660021}},
+		
 }
 
 AscensionItemDB=AscensionItemDB or {}
