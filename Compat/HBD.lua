@@ -227,6 +227,11 @@ local minimapPinCount, queueFullUpdate = 0, false
 local minimapScale, minimapShape, mapRadius, minimapWidth, minimapHeight, mapSin, mapCos
 local lastZoom, lastFacing, lastXY, lastYY
 
+-- Ascension provides Minimap:GetViewRadius() which returns the actual visible
+-- radius in yards at the current zoom level. This is the correct way to get
+-- mapRadius on Ascension, instead of the C_Minimap API or zoom table lookup.
+local MinimapHasViewRadius = pins.Minimap.GetViewRadius and true or false
+
 local function drawMinimapPin(pin, data)
     local xDist, yDist = lastXY - data.x, lastYY - data.y
 
@@ -322,19 +327,19 @@ local function UpdateMinimapPins(force)
         minimapShape = GetMinimapShape and minimap_shapes[GetMinimapShape() or "ROUND"]
         minimapWidth = pins.Minimap:GetWidth() / 2
         minimapHeight = pins.Minimap:GetHeight() / 2
-        if MinimapRadiusAPI then
-            mapRadius = C_Minimap.GetViewRadius()
+        -- Ascension: use Minimap:GetViewRadius() for accurate yard radius at any zoom
+        if MinimapHasViewRadius then
+            mapRadius = pins.Minimap:GetViewRadius()
         else
             local sizeTable = minimap_size[indoors] or minimap_size.outdoor
-			local size = sizeTable[zoom]
-				or sizeTable[5]
-				or sizeTable[4]
-				or sizeTable[3]
-				or sizeTable[2]
-				or sizeTable[1]
-				or sizeTable[0]
-
-			mapRadius = size / 2
+            local size = sizeTable[zoom]
+                or sizeTable[5]
+                or sizeTable[4]
+                or sizeTable[3]
+                or sizeTable[2]
+                or sizeTable[1]
+                or sizeTable[0]
+            mapRadius = size / 2
         end
 
         -- update upvalues for icon placement
@@ -406,20 +411,19 @@ local function UpdateMinimapIconPosition()
     end
 
     if x ~= lastXY or y ~= lastYY or facing ~= lastFacing or refresh then
-        -- update radius of the map
-        if MinimapRadiusAPI then
-            mapRadius = C_Minimap.GetViewRadius()
+        -- Ascension: use Minimap:GetViewRadius() for accurate yard radius at any zoom
+        if MinimapHasViewRadius then
+            mapRadius = pins.Minimap:GetViewRadius()
         else
             local sizeTable = minimap_size[indoors] or minimap_size.outdoor
-			local size = sizeTable[zoom]
-				or sizeTable[5]
-				or sizeTable[4]
-				or sizeTable[3]
-				or sizeTable[2]
-				or sizeTable[1]
-				or sizeTable[0]
-
-			mapRadius = size / 2
+            local size = sizeTable[zoom]
+                or sizeTable[5]
+                or sizeTable[4]
+                or sizeTable[3]
+                or sizeTable[2]
+                or sizeTable[1]
+                or sizeTable[0]
+            mapRadius = size / 2
         end
         -- update upvalues for icon placement
         lastXY, lastYY = x, y
@@ -439,7 +443,7 @@ local function UpdateMinimapIconPosition()
 end
 
 local function UpdateMinimapZoom()
-    if not MinimapRadiusAPI then
+    if not MinimapHasViewRadius then
         local zoom = pins.Minimap:GetZoom()
         if GetCVar("minimapZoom") == GetCVar("minimapInsideZoom") then
             pins.Minimap:SetZoom(zoom < 2 and zoom + 1 or zoom - 1)

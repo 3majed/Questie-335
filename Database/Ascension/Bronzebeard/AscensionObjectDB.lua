@@ -54,8 +54,10 @@ AscensionDB.objectData = AscensionDB.objectData or {
 		[5806332] = {[1]="Search the Tower of Ilgalar for Minervia's whereabouts",[4]={[44]={{80.20,48.10}}},[5]=44},
 		[5253244] = {[1]="Uncover the truth of Minervia's disappearance",[4]={[44]={{37.36,44.58}}},[5]=44},
 		
-		
-		
+		-- Wetlands
+
+		[254687] = {[1]="The Icon of Ironbeard",[4]={[11]={{44.61,24.19}}},[5]=11},
+
 		--Dun Morogh
 
 		[2300507] = {[1]="Plating examined",[4]={[1239]={{37.8,58.23}}},[5]=1239},

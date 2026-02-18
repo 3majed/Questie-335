@@ -88,6 +88,15 @@ AscensionDB.questData = AscensionDB.questData or {
 		[500005] = {[1]="Timber for the Coldhewn",[2]={{765556}},[3]={{765556}},[4]=6,[5]=10,[6]=1101,[8]={"Chop down Dun Morogh trees near Coldhewn Camp and return with 12 Frostpine Logs."},[10]={nil,nil,{{662336}}},[17]=1},
 		[500006] = {[1]="Icehide the Unbroken",[2]={{764536}},[3]={{764536}},[4]=7,[5]=11,[6]=1101,[8]={"You've been asked to track and slay Icehide, the elite Frostsaber haunting Coldhewn Ridge above the camp."},[10]={{{76555}},nil,nil},[17]=1},
 
+		--Wetlands
+
+		[254076] = {[1]="Unfriendly Dragons",[2]={{991508}},[3]={{991508}},[4]=20,[5]=30,[6]=1101,[8]={"Slay Red Whelps, Lost Whelps, and Crimson Whelps in Wetlands"},[10]={{{1042},{1043},{1069}},nil,nil},[17]=11},
+		[254077] = {[1]="Ram Ranch's Woes",[2]={{991508}},[3]={{991508}},[4]=20,[5]=30,[6]=1101,[8]={"Return the lost rams to Ram Ranch"},[10]={{{254992},{254993},{254994}},nil,nil},[11]=354663,[17]=11},
+		[51042] = {[1]="Befriend Flamecrest",[2]={{1001042}},[3]={{1001042}},[4]=20,[5]=30,[6]=1101,[8]={"Bring Flamecrest 5 Tender Crocolisk Meat to earn his trust!"},[10]={nil,nil,{{3667}}},[17]=11},
+		[51043]={[1]="How to Tame a Dragon",[2]={{1001042}},[3]={{1001042}},[4]=20,[5]=30,[6]=1101,[7]=0,[8]={"Befriend 5 whelps by feeding them Seared Crocolisk Meat."},[10]={{{1042},{1043},{1069}},nil,nil},[11]=943004,[13]={51042},[17]=11},
+		[254074] = {[1]="The Icon of Ironbeard",[2]={{764586}},[3]={{764586}},[4]=20,[5]=30,[6]=1101,[8]={"Recover the Icon of Ironbeard"},[10]={nil,nil,{{354662}}},[17]=11},
+		[254075] = {[1]="Conflict of Interest",[2]={{764586}},[3]={{764586}},[4]=20,[5]=30,[6]=1101,[8]={"Slay Mosshide Gnolls in Wetlands"},[10]={{{1012},{1010},{1011},{1014}},nil,nil},[13]={254074},[17]=11},
+
 		--Teldrassil
 			
 		[1660012] = {[1]="The Carrion Road",[2]={{161725}},[3]={{161726}},[4]=2,[5]=6,[6]=1101,[8]={"Walk the Carrion Path and defeat its guardians."},[10]={{{161787}},{{5166357}}},[17]=1243},
